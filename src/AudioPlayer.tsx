@@ -4,12 +4,11 @@ import WaveSurfer from 'wavesurfer.js';
 const formWaveSurferOptions = (ref: string) => ({
     container: ref,
     waveColor: '#ccc',
-    progressColor: '#00ff00',
+    progressColor: '#ff0063',
     cursorColor: 'transparent',
     responsive: true,
     height: 80,
     normalize: true,
-    // backend: 'WebAudio',
     barWidth: 2,
     barGap: 3
 })

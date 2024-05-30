@@ -8,6 +8,8 @@ const SaveWithAudioRecorder: React.FC = () => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const [timer, setTimer] = useState<number>(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const startRecording = async () => {
     try {
@@ -28,6 +30,11 @@ const SaveWithAudioRecorder: React.FC = () => {
 
       mediaRecorderRef.current.start();
       setIsRecording(true);
+
+      //   timer 
+      timerRef.current = setInterval(() => {
+        setTimer(prev => prev + 1);
+      }, 1000);
     } catch (err) {
       console.error('Error accessing microphone', err);
     }
@@ -57,11 +64,18 @@ const SaveWithAudioRecorder: React.FC = () => {
     console.log('data stream', isRecording, audioUrl, audioBlob, mediaRecorderRef, audioChunksRef)
   }, [audioBlob, audioUrl, isRecording])
 
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
   return (
     <div>
       <button onClick={isRecording ? stopRecording : startRecording}>
         {isRecording ? 'Stop Recording' : 'Start Recording'}
       </button>
+      <div>{isRecording && <span>Recording: {formatTime(timer)}</span>}</div>
       <p></p>
       {audioUrl && (
         <div>
